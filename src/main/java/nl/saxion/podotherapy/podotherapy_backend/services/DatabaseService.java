@@ -20,9 +20,9 @@ public class DatabaseService {
 
 		System.out.println("Initializing database...");
 		
-		final Person user1 = new Person("Emma", "emma@mail.com", passwordEncoder.encode("111"));
-		final Person user2 = new Person("Jhon", "jhon@mail.com", passwordEncoder.encode("222"));
-		final Person admin = new Person("Anna", "anna@mail.com", passwordEncoder.encode("333"));
+		final Person user1 = new Person("TestUser", "user@email.com", passwordEncoder.encode("user"));
+		final Person user2 = new Person("TestCas", "jhon@email.com", passwordEncoder.encode("cas"));
+		final Person admin = new Person("Admin", "admin@email.com", passwordEncoder.encode("admin"));
 		
 		admin.addRole(Role.ADMIN);
 	

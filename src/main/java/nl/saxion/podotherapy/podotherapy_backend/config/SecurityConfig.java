@@ -34,6 +34,7 @@ public class SecurityConfig {
 	@Autowired
 	private JwtAuthFilter jwtAuthFilter;
 
+	@SuppressWarnings("deprecation")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity
@@ -60,10 +61,10 @@ public class SecurityConfig {
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
-		
+
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
+		return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/pg-web-console/**"));
 	}
 
 	private AuthenticationProvider authenticationProvider() {
