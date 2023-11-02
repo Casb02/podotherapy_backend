@@ -1,12 +1,12 @@
 package nl.saxion.podotherapy.podotherapy_backend.entities;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,21 +24,34 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 
+@Getter
+@Setter
+@ToString
 @Entity
 public class Person implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
 
+	@Getter
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen_person_id")
 	@SequenceGenerator(name = "gen_person_id", sequenceName = "seq_person_id", allocationSize = 1)
 	private Long id;
+
+	//UUID for the person
+	@Getter
+	@Column(nullable = false, unique = true, length = 36)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private String uuid;
 	
+	@Getter
 	@Column(nullable = false, length = 50)
 	private String name;
 	
+	@Getter
 	@Column(nullable = false, unique = true, length = 100)
 	private String email;
 	
+	@Getter
 	@Column(nullable = false, length = 60)
 	private String password;
 	
@@ -51,82 +64,98 @@ public class Person implements Serializable, UserDetails {
 		super();
 	}
 
+	/**
+	 * Constructs a new Person object with the given parameters.
+	 *
+	 * @param id The ID of the person. Must be of type Long.
+	 * @param name The name of the person. Must be of type String.
+	 * @param email The email address of the person. Must be of type String.
+	 * @param password The password of the person. Must be of type String.
+	 * @param roles A set of roles associated with the person. Must be of type Set<Role>.
+	 */
 	public Person(Long id, String name, String email, String password, Set<Role> roles) {
 		super();
 		this.id = id;
+		this.uuid = UUID.randomUUID().toString();
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.setRoles(roles);
 	}
 
+	/**
+	 * Constructs a new Person object with the given parameters.
+	 *
+	 * @param name The name of the person. Must be of type String.
+	 * @param email The email address of the person. Must be of type String.
+	 * @param password The password of the person. Must be of type String.
+	 */
 	public Person(String name, String email, String password) {
 		super();
+		this.uuid = UUID.randomUUID().toString();
 		this.name = name;
 		this.email = email;
 		this.password = password;
 	}
-	
+
+	/**
+	 * Constructs a new Person object using the provided PersonDTO object.
+	 *
+	 * @param dto The PersonDTO object containing the person's information. Must not be null.
+	 */
 	public Person(PersonDTO dto) {
 		this(dto.getName(), dto.getEmail(), dto.getPassword());
 		this.setId(dto.getId());
 		this.setStringRoles(dto.getRoles());
 	}
-	
-	public Long getId() {
-		return id;
-	}
 
-	public String getName() {
-		return name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
+	/**
+	 * Retrieves the roles assigned to the person.
+	 *
+	 * @return A set of Role objects representing the person's roles.
+	 */
 	public Set<Role> getRoles() {
-		return roles.stream().map(r -> Role.fromId(r)).collect(Collectors.toSet());
+		return roles.stream().map(Role::fromId).collect(Collectors.toSet());
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+	/**
+	 * Sets the roles assigned to the person.
+	 *
+	 * @param roles A set of Role objects representing the person's roles.
+	 */
 	public void setRoles(Set<Role> roles) {
 		if (roles == null || roles.isEmpty())
 			this.roles.clear();
 		else
-			this.roles = roles.stream().map(r -> r.getId()).collect(Collectors.toSet());
+			this.roles = roles.stream().map(Role::getId).collect(Collectors.toSet());
 	}
-	
+
+	/**
+	 * Sets the string-based roles assigned to the person.
+	 *
+	 * @param roles A set of strings representing the person's roles.
+	 */
 	public void setStringRoles(Set<String> roles) {
 		if (roles == null || roles.isEmpty())
 			this.roles.clear();
 		else
 			this.roles = roles.stream().map(s -> Role.fromDescription(s).getId()).collect(Collectors.toSet());
 	}
-	
+
+	/**
+	 * Adds a role to the person's list of roles.
+	 *
+	 * @param role The role to be added.
+	 */
 	public void addRole(Role role) {
 		this.roles.add(role.getId());
 	}
 
+	/**
+	 * Retrieves the person's authorities, which are represented as a collection of granted authorities.
+	 *
+	 * @return A collection of granted authorities representing the person's roles.
+	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles.stream()
@@ -134,34 +163,58 @@ public class Person implements Serializable, UserDetails {
 				.collect(Collectors.toSet());
 	}
 
+	/**
+	 * Retrieves the username associated with the person.
+	 *
+	 * @return The username associated with the person.
+	 */
 	@Override
 	public String getUsername() {
 		return email;
 	}
 
+	/**
+	 * Indicates whether the account associated with the person has expired.
+	 * (We don't have a mechanism for expiring accounts, so this method always returns true.)
+	 *
+	 * @return true if the account has not expired, false otherwise.
+	 */
 	@Override
 	public boolean isAccountNonExpired() {
-		return true;
+		return true; //TODO: Implement this method (override from UserDetails)
 	}
 
+	/**
+	 * Indicates whether the account associated with the person is locked.
+	 * (We don't have a mechanism for locking accounts, so this method always returns true.)
+	 *
+	 * @return true if the account is not locked, false otherwise.
+	 */
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return true; //TODO: Implement this method (override from UserDetails)
 	}
 
+	/**
+	 * Indicates whether the credentials associated with the person are expired.
+	 * (We don't have a mechanism for expiring credentials, so this method always returns true.)
+	 *
+	 * @return true if the credentials are not expired, false otherwise.
+	 */
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return true;  //TODO: Implement this method (override from UserDetails)
 	}
 
+	/**
+	 * Indicates whether the person is enabled.
+	 * (We don't have a mechanism for disabling accounts, so this method always returns true.)
+	 *
+	 * @return true if the person is enabled, false otherwise.
+	 */
 	@Override
 	public boolean isEnabled() {
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", email=" + email + ", roles=" + getRoles() + "]";
+		return true; //TODO: Implement this method (override from UserDetails)
 	}
 	
 }

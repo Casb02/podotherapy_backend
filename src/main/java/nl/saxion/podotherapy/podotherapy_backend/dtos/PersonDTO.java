@@ -4,9 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+import lombok.Setter;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
 
+@Getter
+@Setter
 public class PersonDTO {
 	
 	private Long id;
@@ -35,42 +39,11 @@ public class PersonDTO {
 		this.setRoles(person.getRoles());
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-	
-	public Set<String> getRoles() {
-		return roles;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+	/**
+	 * Sets the roles of the person.
+	 *
+	 * @param roles - a Set of Role objects representing the roles of the person.
+	 */
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles.stream().map(r -> r.getDescription()).collect(Collectors.toSet());
 	}

@@ -34,6 +34,13 @@ public class SecurityConfig {
 	@Autowired
 	private JwtAuthFilter jwtAuthFilter;
 
+	/**
+	 * Configures the security filter chain for the application.
+	 *
+	 * @param httpSecurity the HttpSecurity object used to configure security settings
+	 * @return the configured SecurityFilterChain object
+	 * @throws Exception if an error occurs during configuration
+	 */
 	@SuppressWarnings("deprecation")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -52,21 +59,43 @@ public class SecurityConfig {
 				.build();
 	}
 
+	/**
+	 * Creates and returns a BCryptPasswordEncoder object for password encoding.
+	 *
+	 * @return the BCryptPasswordEncoder object
+	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
+	/**
+	 * Creates and returns an AuthenticationManager object for handling authentication requests.
+	 *
+	 * @param config the AuthenticationConfiguration object containing the necessary configuration options
+	 * @return the AuthenticationManager object
+	 * @throws Exception if an error occurs while creating the AuthenticationManager
+	 */
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
 
+	/**
+	 * Creates and returns a WebSecurityCustomizer object for customizing web security configurations.
+	 *
+	 * @return the WebSecurityCustomizer object
+	 */
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/pg-web-console/**"));
 	}
 
+	/**
+	 * Creates and returns an AuthenticationProvider object for authentication purposes.
+	 *
+	 * @return the AuthenticationProvider object
+	 */
 	private AuthenticationProvider authenticationProvider() {
 		final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(userDetailsService);

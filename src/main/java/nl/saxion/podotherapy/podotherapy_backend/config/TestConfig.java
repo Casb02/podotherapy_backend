@@ -10,7 +10,10 @@ public class TestConfig {
 	
 	@Autowired
 	private DatabaseService databaseService;
-	
+
+	/**
+	 * Initializes the database with test data. This method is called automatically when the application starts.
+	 */
 	@Bean
 	public void initializeDatabase() {
 		databaseService.initializeDatabase();

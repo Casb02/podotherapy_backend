@@ -1,9 +1,11 @@
 package nl.saxion.podotherapy.podotherapy_backend.dtos;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+@Getter
 public class StandardErrorDTO {
 
 	private Integer status;
@@ -16,22 +18,6 @@ public class StandardErrorDTO {
 		this.error = ex.getClass().getSimpleName();
 		this.message = ex.getMessage();
 		this.path = request.getRequestURI();
-	}
-	
-	public Integer getStatus() {
-		return status;
-	}
-
-	public String getError() {
-		return error;
-	}
-	
-	public String getMessage() {
-		return message;
-	}
-	
-	public String getPath() {
-		return path;
 	}
 
 }

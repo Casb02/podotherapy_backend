@@ -7,6 +7,7 @@ import nl.saxion.podotherapy.podotherapy_backend.exceptions.DuplicationException
 import nl.saxion.podotherapy.podotherapy_backend.exceptions.NotFoundException;
 import nl.saxion.podotherapy.podotherapy_backend.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonDTO;
@@ -69,4 +70,13 @@ public class PersonService {
 		}
 	}
 
+	/**
+	 * Retrieves the person associated with the given authentication object.
+	 *
+	 * @param authentication The authentication object. Must not be null.
+	 * @return Person - the person associated with the given authentication object.
+	 */
+    public Person getPersonFromAuthentication(Authentication authentication) {
+		return findByEmail(authentication.getName());
+    }
 }

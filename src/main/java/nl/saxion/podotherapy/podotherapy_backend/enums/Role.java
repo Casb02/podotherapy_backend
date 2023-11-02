@@ -1,34 +1,22 @@
 package nl.saxion.podotherapy.podotherapy_backend.enums;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Arrays;
 import java.util.Objects;
 
+@Getter
 public enum Role {
 	
 	USER(1, "User"),
 	ADMIN(2, "Administrator");
 	
-	private Integer id;
-	private String description;
+	private final Integer id;
+	private final String description;
 
 	Role(Integer id, String description) {
 		this.id = id;
-		this.description = description;
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setDescription(String description) {
 		this.description = description;
 	}
 	
