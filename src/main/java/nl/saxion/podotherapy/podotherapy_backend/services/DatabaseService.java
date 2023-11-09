@@ -24,9 +24,9 @@ public class DatabaseService {
 
 		System.out.println("Initializing database...");
 		
-		final Person user1 = new Person("TestUser", "user@email.com", passwordEncoder.encode("user"));
-		final Person user2 = new Person("TestCas", "jhon@email.com", passwordEncoder.encode("cas"));
-		final Person admin = new Person("Admin", "admin@email.com", passwordEncoder.encode("admin"));
+		final Person user1 = new Person("TestUser", passwordEncoder.encode("user"));
+		final Person user2 = new Person("TestCas", passwordEncoder.encode("cas"));
+		final Person admin = new Person("Admin", passwordEncoder.encode("admin"));
 
 
 

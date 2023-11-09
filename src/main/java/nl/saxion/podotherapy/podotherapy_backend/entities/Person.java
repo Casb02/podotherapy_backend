@@ -4,25 +4,17 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonDTO;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
-
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
 
 @Getter
 @Setter
@@ -44,12 +36,8 @@ public class Person implements Serializable, UserDetails {
 	private String uuid;
 	
 	@Getter
-	@Column(nullable = false, length = 50)
-	private String name;
-	
-	@Getter
-	@Column(nullable = false, unique = true, length = 100)
-	private String email;
+	@Column(nullable = false, length = 50, unique = true)
+	private String username;
 	
 	@Getter
 	@Column(nullable = false, length = 60)
@@ -59,7 +47,16 @@ public class Person implements Serializable, UserDetails {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "person_role")
 	private Set<Integer> roles = new HashSet<>(Arrays.asList(Role.USER.getId()));
-	
+
+	@Getter
+	@Column(length = 50)
+	private Date dateOfBirth;
+
+	@Getter
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
+
+
 	public Person() {
 		super();
 	}
@@ -69,16 +66,35 @@ public class Person implements Serializable, UserDetails {
 	 *
 	 * @param id The ID of the person. Must be of type Long.
 	 * @param name The name of the person. Must be of type String.
-	 * @param email The email address of the person. Must be of type String.
 	 * @param password The password of the person. Must be of type String.
 	 * @param roles A set of roles associated with the person. Must be of type Set<Role>.
+	 * @param dateOfBirth Date of birth of the person. Must be of type Date.
+	 * @param gender Gender of the person
 	 */
-	public Person(Long id, String name, String email, String password, Set<Role> roles) {
+	public Person(Long id, String name, String password, Set<Role> roles, Date dateOfBirth, Gender gender) {
 		super();
 		this.id = id;
 		this.uuid = UUID.randomUUID().toString();
-		this.name = name;
-		this.email = email;
+		this.username = name;
+		this.password = password;
+		this.setRoles(roles);
+		this.dateOfBirth = dateOfBirth;
+		this.gender = gender;
+	}
+
+	/**
+	 * Constructs a new Person object with the given parameters.
+	 *
+	 * @param id The ID of the person. Must be of type Long.
+	 * @param name The name of the person. Must be of type String.
+	 * @param password The password of the person. Must be of type String.
+	 * @param roles A set of roles associated with the person. Must be of type Set<Role>.
+	 */
+	public Person(Long id, String name, String password, Set<Role> roles) {
+		super();
+		this.id = id;
+		this.uuid = UUID.randomUUID().toString();
+		this.username = name;
 		this.password = password;
 		this.setRoles(roles);
 	}
@@ -87,14 +103,12 @@ public class Person implements Serializable, UserDetails {
 	 * Constructs a new Person object with the given parameters.
 	 *
 	 * @param name The name of the person. Must be of type String.
-	 * @param email The email address of the person. Must be of type String.
 	 * @param password The password of the person. Must be of type String.
 	 */
-	public Person(String name, String email, String password) {
+	public Person(String name, String password) {
 		super();
 		this.uuid = UUID.randomUUID().toString();
-		this.name = name;
-		this.email = email;
+		this.username = name;
 		this.password = password;
 	}
 
@@ -104,7 +118,7 @@ public class Person implements Serializable, UserDetails {
 	 * @param dto The PersonDTO object containing the person's information. Must not be null.
 	 */
 	public Person(PersonDTO dto) {
-		this(dto.getName(), dto.getEmail(), dto.getPassword());
+		this(dto.getUsername(), dto.getPassword());
 		this.setId(dto.getId());
 		this.setStringRoles(dto.getRoles());
 	}
@@ -161,16 +175,6 @@ public class Person implements Serializable, UserDetails {
 		return roles.stream()
 				.map(r -> new SimpleGrantedAuthority(Role.fromId(r).name()))
 				.collect(Collectors.toSet());
-	}
-
-	/**
-	 * Retrieves the username associated with the person.
-	 *
-	 * @return The username associated with the person.
-	 */
-	@Override
-	public String getUsername() {
-		return email;
 	}
 
 	/**

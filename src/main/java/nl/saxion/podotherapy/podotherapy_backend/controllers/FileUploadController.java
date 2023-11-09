@@ -8,9 +8,10 @@ import nl.saxion.podotherapy.podotherapy_backend.services.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @RestController
 @RequestMapping("/gamesave")
@@ -34,8 +35,10 @@ public class FileUploadController {
     }
 
     @GetMapping("/restore")
-    public ResponseEntity<String> restore() {
-        storageService.load();
-        return ResponseEntity.ok("Game File restored to last save");
+    public File restore(Authentication authentication) {
+        //get person from security context
+        Person person = personService.getPersonFromAuthentication(authentication);
+
+        return storageService.getLatestGamesave(person);
     }
 }

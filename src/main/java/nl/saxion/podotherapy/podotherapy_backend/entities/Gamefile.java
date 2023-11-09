@@ -30,6 +30,12 @@ public class Gamefile {
     @Column(name = "date", nullable = false)
     private Date date;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    @Column(name = "is_corrupted", nullable = false)
+    private boolean isCorrupted = false;
+
     public Gamefile() {
         super();
     }

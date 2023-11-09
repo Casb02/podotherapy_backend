@@ -2,15 +2,12 @@ package nl.saxion.podotherapy.podotherapy_backend.controllers;
 
 import java.util.List;
 
+import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonDTO;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
@@ -20,7 +17,7 @@ import nl.saxion.podotherapy.podotherapy_backend.services.PersonService;
  * The PersonController class handles requests related to the person resource.
  */
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/users")
 public class PersonController {
 	
 	@Autowired
@@ -35,9 +32,10 @@ public class PersonController {
 	 * @return ResponseEntity<List < PersonDTO>> - a ResponseEntity object containing a list of PersonDTO objects representing all the persons in the database.
 	 */
 	@GetMapping
-	public ResponseEntity<List<PersonDTO>> findAll() {
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity<List<PersonResponseDTO>> findAll() {
 		final List<Person> persons = service.findAll();
-		final List<PersonDTO> dtos = persons.stream().map(p -> new PersonDTO(p)).toList();
+		final List<PersonResponseDTO> dtos = persons.stream().map(PersonResponseDTO::new).toList();
 		return ResponseEntity.ok(dtos);
 	}
 
@@ -47,6 +45,8 @@ public class PersonController {
 	 * @param dto - a PersonDTO object representing the details of the person to be created.
 	 * @return ResponseEntity<PersonDTO> - a ResponseEntity object containing a PersonDTO object representing the newly created person.
 	 */
+	@PostMapping("/create")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO dto) {
 		dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return ResponseEntity.ok(service.create(dto));
@@ -58,6 +58,8 @@ public class PersonController {
 	 * @param dto - a PersonDTO object representing the details of the person to be updated.
 	 * @return ResponseEntity<PersonDTO> - a ResponseEntity object containing a PersonDTO object representing the updated person.
 	 */
+	@PostMapping("/update")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<PersonDTO> update(@RequestBody PersonDTO dto) {
 		dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return ResponseEntity.ok(service.create(dto));

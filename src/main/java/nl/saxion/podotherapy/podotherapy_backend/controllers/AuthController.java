@@ -1,14 +1,15 @@
 package nl.saxion.podotherapy.podotherapy_backend.controllers;
 
+import nl.saxion.podotherapy.podotherapy_backend.dtos.AuthRequestUsernameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.RegisterRequestDTO;
-import nl.saxion.podotherapy.podotherapy_backend.dtos.AuthRequestDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.AuthResponseDTO;
 import nl.saxion.podotherapy.podotherapy_backend.services.AuthService;
 
@@ -29,6 +30,7 @@ public class AuthController {
 	 * @return A ResponseEntity object containing the AuthResponseDTO object associated with the registered user.
 	 */
 	@PostMapping("/register")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO dto) {
 		return ResponseEntity.ok(authService.register(dto));
 	}
@@ -36,11 +38,11 @@ public class AuthController {
 	/**
 	 * Authenticates a user with the provided credentials.
 	 *
-	 * @param dto The AuthRequestDTO object containing the user's authentication credentials.
+	 * @param dto The AuthRequestUsernameDTO object containing the user's credentials.
 	 * @return A ResponseEntity object containing the AuthResponseDTO object associated with the authenticated user.
 	 */
 	@PostMapping("/authenticate")
-	public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthRequestDTO dto) {
-		return ResponseEntity.ok(authService.authenticate(dto));
+	public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthRequestUsernameDTO dto) {
+		return ResponseEntity.ok(authService.authenticateWithUsername(dto));
 	}
 }

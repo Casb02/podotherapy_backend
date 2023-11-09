@@ -40,9 +40,18 @@ public class StorageService {
         }
 
         try {
+
             Path targetLocation = Paths.get(personalStorageLocation).resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             Gamefile gamefile = new Gamefile(targetLocation.toString(), person);
+
+            // if there are more than 3 files, delete the oldest one
+            if (gamefileRepository.count() > 3) {
+                Gamefile oldestGamefile = gamefileRepository.findFirstByPersonOrderByDateAsc(person);
+                Files.delete(Paths.get(oldestGamefile.getPath() + "/" + oldestGamefile.getFileName()));
+                gamefileRepository.delete(oldestGamefile);
+            }
+
             return gamefileRepository.save(gamefile);
 
         } catch (IOException e) {
@@ -56,9 +65,19 @@ public class StorageService {
      *
      * @return the loaded file
      */
-    public File load() {
+    public File getLatestGamesave(Person person) {
+        Gamefile gamefile = gamefileRepository.findLastByPersonOrderByDateAsc(person);
+        if (gamefile == null) throw new RuntimeException("No gamefile found");
 
-        return null;
+        return new File(gamefile.getPath() + "/" + gamefile.getFileName());
+    }
+
+    public void markLastGamefileAsCorrupted(Person person) {
+        Gamefile gamefile = gamefileRepository.findLastByPersonOrderByDateAsc(person);
+        if (gamefile == null) throw new RuntimeException("No gamefile found");
+
+        gamefile.setCorrupted(true);
+        gamefileRepository.save(gamefile);
     }
 
 }

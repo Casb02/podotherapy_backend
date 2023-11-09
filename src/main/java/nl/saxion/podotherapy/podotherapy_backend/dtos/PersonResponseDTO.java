@@ -1,45 +1,36 @@
 package nl.saxion.podotherapy.podotherapy_backend.dtos;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import lombok.Getter;
 import lombok.Setter;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
-import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
 
 @Getter
 @Setter
-public class PersonDTO {
-	
+public class PersonResponseDTO {
+
 	private Long id;
 	private String username;
-	private String password;
-	private Set<String> roles = new HashSet<>();
 	private String dateOfBirth;
 	private String gender;
 
 
-	public PersonDTO() {
+	public PersonResponseDTO() {
 		super();
 	}
 
-	public PersonDTO(Long id, String username, Set<String> roles, String dateOfBirth, String gender) {
+	public PersonResponseDTO(Long id, String username, String dateOfBirth, String gender) {
 		super();
 		this.id = id;
 		this.username = username;
-		this.roles = roles;
 		this.dateOfBirth = dateOfBirth;
 		this.gender = gender;
 	}
-	
-	public PersonDTO(Person person) {
+
+	public PersonResponseDTO(Person person) {
 		super();
 		this.id = person.getId();
 		this.username = person.getUsername();
-		this.setRoles(person.getRoles());
 
 		if (person.getDateOfBirth() != null) {
 			this.dateOfBirth = person.getDateOfBirth().toString();
@@ -51,13 +42,5 @@ public class PersonDTO {
 		} else this.gender = Gender.UNKNOWN.toString();
 	}
 
-	/**
-	 * Sets the roles of the person.
-	 *
-	 * @param roles - a Set of Role objects representing the roles of the person.
-	 */
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles.stream().map(Role::getDescription).collect(Collectors.toSet());
-	}
 	
 }

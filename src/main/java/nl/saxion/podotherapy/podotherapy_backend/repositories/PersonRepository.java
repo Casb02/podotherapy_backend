@@ -8,5 +8,5 @@ import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-	Optional<Person> findByEmail(String email);
+    Optional<Person> findByUsername(String username);
 }
