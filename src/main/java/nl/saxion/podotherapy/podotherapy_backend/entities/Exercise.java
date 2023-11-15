@@ -12,8 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Exercise {
+
     @Id
-    @Getter
+    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false, unique = true, length = 36)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
@@ -35,6 +41,7 @@ public class Exercise {
         joinColumns = @JoinColumn(name = "exercise_uuid"),
         inverseJoinColumns = @JoinColumn(name = "track_uuid")
     )
+    @ToString.Exclude
     private List<Track> tracks;
 
     /**

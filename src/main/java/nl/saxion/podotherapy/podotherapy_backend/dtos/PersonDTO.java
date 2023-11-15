@@ -13,26 +13,27 @@ import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
 @Getter
 @Setter
 public class PersonDTO {
-	
+
 	private Long id;
 	private String username;
 	private String password;
 	private Set<String> roles = new HashSet<>();
 	private String dateOfBirth;
 	private String gender;
-
+	private HistoryDTO history;
 
 	public PersonDTO() {
 		super();
 	}
 
-	public PersonDTO(Long id, String username, Set<String> roles, String dateOfBirth, String gender) {
+	public PersonDTO(Long id, String username, Set<String> roles, String dateOfBirth, String gender, HistoryDTO history) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.roles = roles;
 		this.dateOfBirth = dateOfBirth;
 		this.gender = gender;
+		this.history = history;
 	}
 	
 	public PersonDTO(Person person) {
@@ -49,6 +50,10 @@ public class PersonDTO {
 		if (person.getGender() != null) {
 			this.gender = person.getGender().toString();
 		} else this.gender = Gender.UNKNOWN.toString();
+
+		if (person.getHistory() != null) {
+			this.history = new HistoryDTO(person.getHistory());
+		} else this.history = new HistoryDTO();
 	}
 
 	/**

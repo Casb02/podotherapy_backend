@@ -51,4 +51,14 @@ public class Gamefile {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
+    @Override
+    public String toString() {
+       StringBuilder sb = new StringBuilder();
+         sb.append("Gamefile-ID: ").append(this.id)
+                .append(", Path: ").append(this.path)
+                .append(", Date: ").append(this.date)
+                .append(", Is deleted: ").append(this.isDeleted)
+                .append(", Is corrupted: ").append(this.isCorrupted);
+         return sb.toString();
+    }
 }

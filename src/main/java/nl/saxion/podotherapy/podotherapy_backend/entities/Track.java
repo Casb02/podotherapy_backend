@@ -12,7 +12,14 @@ import java.util.List;
 @ToString
 @Entity
 public class Track {
+
     @Id
+    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false, unique = true, length = 36)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;

@@ -30,7 +30,6 @@ public class PersonService {
     }
 
     public Person create(Person person) {
-        person.setId(null);
         person.addRole(Role.USER);
         checkUsernameDuplication(person);
         return repository.save(person);
