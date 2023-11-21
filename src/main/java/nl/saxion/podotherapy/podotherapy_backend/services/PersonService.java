@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonCreateDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonCreateDTO;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 import nl.saxion.podotherapy.podotherapy_backend.exceptions.DuplicationException;
 import nl.saxion.podotherapy.podotherapy_backend.exceptions.NotFoundException;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonDTO;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
 

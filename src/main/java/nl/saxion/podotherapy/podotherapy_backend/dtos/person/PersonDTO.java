@@ -1,4 +1,4 @@
-package nl.saxion.podotherapy.podotherapy_backend.dtos;
+package nl.saxion.podotherapy.podotherapy_backend.dtos.person;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.history.HistoryDTO;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Role;

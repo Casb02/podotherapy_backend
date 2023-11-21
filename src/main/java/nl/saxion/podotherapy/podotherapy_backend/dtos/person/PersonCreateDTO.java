@@ -1,4 +1,4 @@
-package nl.saxion.podotherapy.podotherapy_backend.dtos;
+package nl.saxion.podotherapy.podotherapy_backend.dtos.person;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

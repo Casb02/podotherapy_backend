@@ -2,15 +2,14 @@ package nl.saxion.podotherapy.podotherapy_backend.controllers;
 
 import java.util.List;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonCreateDTO;
-import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonResponseDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonCreateDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonDTO;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.services.PersonService;
 

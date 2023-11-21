@@ -1,14 +1,14 @@
 package nl.saxion.podotherapy.podotherapy_backend.services;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.AuthRequestUsernameDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.AuthRequestUsernameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.AuthResponseDTO;
-import nl.saxion.podotherapy.podotherapy_backend.dtos.RegisterRequestDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.AuthResponseDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.RegisterRequestDTO;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 
 @Service

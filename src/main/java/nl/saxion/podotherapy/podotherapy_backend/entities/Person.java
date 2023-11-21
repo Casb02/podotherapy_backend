@@ -8,13 +8,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonDTO;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
 
 @Getter

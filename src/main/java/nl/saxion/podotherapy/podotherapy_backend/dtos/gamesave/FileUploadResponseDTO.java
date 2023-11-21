@@ -1,4 +1,4 @@
-package nl.saxion.podotherapy.podotherapy_backend.dtos;
+package nl.saxion.podotherapy.podotherapy_backend.dtos.gamesave;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

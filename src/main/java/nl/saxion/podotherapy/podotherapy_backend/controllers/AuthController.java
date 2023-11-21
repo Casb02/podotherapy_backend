@@ -1,6 +1,6 @@
 package nl.saxion.podotherapy.podotherapy_backend.controllers;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.AuthRequestUsernameDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.AuthRequestUsernameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.RegisterRequestDTO;
-import nl.saxion.podotherapy.podotherapy_backend.dtos.AuthResponseDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.RegisterRequestDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.AuthResponseDTO;
 import nl.saxion.podotherapy.podotherapy_backend.services.AuthService;
 
 /**

@@ -1,6 +1,6 @@
 package nl.saxion.podotherapy.podotherapy_backend.controllers;
 
-import nl.saxion.podotherapy.podotherapy_backend.dtos.FileUploadResponseDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.gamesave.FileUploadResponseDTO;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Gamefile;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.services.PersonService;
