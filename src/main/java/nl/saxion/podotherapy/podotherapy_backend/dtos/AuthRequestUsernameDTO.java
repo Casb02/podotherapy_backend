@@ -1,13 +1,15 @@
 package nl.saxion.podotherapy.podotherapy_backend.dtos;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class AuthRequestUsernameDTO {
-	
+	@Schema(description = "The username of the person.", example = "Kevin")
 	private String username;
-	private String password;
 
+	@Schema(description = "The password of the person.", example = "root")
+	private String password;
 }

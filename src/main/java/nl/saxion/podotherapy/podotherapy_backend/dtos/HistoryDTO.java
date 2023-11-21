@@ -1,5 +1,6 @@
 package nl.saxion.podotherapy.podotherapy_backend.dtos;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class HistoryDTO {
+    @Schema(description = "The id of the history.", example = "43")
     private Long id;
+
+    @Schema(description = "List of day IDs (id's are random because all days for all users are stored in one table)", example = "[\"435\", \"657\"]")
     private List<String> dayIds;
 
 

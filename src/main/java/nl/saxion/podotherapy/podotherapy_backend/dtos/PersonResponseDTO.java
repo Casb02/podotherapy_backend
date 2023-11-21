@@ -1,5 +1,6 @@
 package nl.saxion.podotherapy.podotherapy_backend.dtos;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
@@ -9,9 +10,16 @@ import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 @Setter
 public class PersonResponseDTO {
 
+	@Schema(description = "The ID of the person.", example = "23")
 	private Long id;
+
+	@Schema(description = "The username of the person.", example = "Kevin")
 	private String username;
+
+	@Schema(description = "The date of birth of the person. (yyyy-MM-dd)", example = "2012-09-18")
 	private String dateOfBirth;
+
+	@Schema(description = "The gender of the person, ENUM (MALE, FEMALE, OTHER, UNKNOWN)", example = "MALE")
 	private String gender;
 
 

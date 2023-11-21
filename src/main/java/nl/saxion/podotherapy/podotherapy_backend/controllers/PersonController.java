@@ -2,6 +2,7 @@ package nl.saxion.podotherapy.podotherapy_backend.controllers;
 
 import java.util.List;
 
+import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonCreateDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.PersonResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class PersonController {
 	 */
 	@PostMapping("/create")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO dto) {
+	public ResponseEntity<PersonCreateDTO> create(@RequestBody PersonCreateDTO dto) {
 		dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return ResponseEntity.ok(service.create(dto));
 	}
@@ -60,7 +61,7 @@ public class PersonController {
 	 */
 	@PostMapping("/update")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<PersonDTO> update(@RequestBody PersonDTO dto) {
+	public ResponseEntity<PersonCreateDTO> update(@RequestBody PersonCreateDTO dto) {
 		dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return ResponseEntity.ok(service.create(dto));
 	}
