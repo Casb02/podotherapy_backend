@@ -110,6 +110,23 @@ public class Person implements Serializable, UserDetails {
     }
 
     /**
+     * Constructs a new Person object with the given parameters.
+     *
+     * @param name         The name of the person. Must be of type String.
+     * @param password     The password of the person. Must be of type String.
+     * @param dateOfBirth  The date of birth of the person. Must be of type Date.
+     * @param gender       The gender of the person. Must be of type Gender.
+     */
+    public Person(String name, String password, Date dateOfBirth, Gender gender) {
+        super();
+        this.uuid = UUID.randomUUID().toString();
+        this.username = name;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
+
+    /**
      * Constructs a new Person object using the provided PersonDTO object.
      *
      * @param dto The PersonDTO object containing the person's information. Must not be null.

@@ -34,6 +34,8 @@ public class PersonResponseDTO {
 
 		if (person.getDateOfBirth() != null) {
 			this.dateOfBirth = person.getDateOfBirth().toString();
+			//remove "2002-09-18 00:00:00.0" to "2002-09-18"
+			this.dateOfBirth = this.dateOfBirth.substring(0, 10);
 		} else this.dateOfBirth = "";
 
 

@@ -34,7 +34,7 @@ public class PersonController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<List<PersonResponseDTO>> findAll() {
-		final List<Person> persons = service.findAll();
+		final List<Person> persons = service.findAllNonAdmin();
 		final List<PersonResponseDTO> dtos = persons.stream().map(PersonResponseDTO::new).toList();
 		return ResponseEntity.ok(dtos);
 	}

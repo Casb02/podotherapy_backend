@@ -29,6 +29,10 @@ public class PersonService {
         return repository.findAll();
     }
 
+    public List<Person> findAllNonAdmin() {
+        return repository.findAllByRolesNotContaining(Role.ADMIN.getId());
+    }
+
     public Person create(Person person) {
         person.addRole(Role.USER);
         checkUsernameDuplication(person);
