@@ -1,11 +1,13 @@
 package nl.saxion.podotherapy.podotherapy_backend.services;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonCreateDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonResponseDetailedDTO;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 import nl.saxion.podotherapy.podotherapy_backend.exceptions.DuplicationException;
 import nl.saxion.podotherapy.podotherapy_backend.exceptions.NotFoundException;
@@ -33,6 +35,16 @@ public class PersonService {
     public Person findById(Long id) {
         return repository.findById(id).orElseThrow(
                 () -> new NotFoundException("Person not found: " + id));
+    }
+
+    /**
+     * Finds a person by their ID and returns a detailed DTO representation of the person.
+     *
+     * @param id the ID of the person to find
+     * @return the detailed DTO representation of the person with the specified ID
+     */
+    public PersonResponseDetailedDTO findByIdDetailed(Long id) {
+        return new PersonResponseDetailedDTO(findById(id));
     }
 
     /**
@@ -87,17 +99,27 @@ public class PersonService {
     }
 
     /**
-     * Updates an existing person object with the data from the provided Person object.
+     * Updates the person with the specified ID using the data from the provided PersonCreateDTO.
      *
-     * @param person The Person object containing the updated data for the person to be updated.
+     * @param id The ID of the person to be updated.
+     * @param dto The PersonCreateDTO object containing the updated data for the person.
      * @return The updated Person object.
+     * @throws NotFoundException If the person with the specified ID is not found.
      */
-    public Person update(Person person) {
-        checkUsernameDuplication(person);
-        Person p = findById(person.getId());
-        p.setUsername(person.getUsername());
-        p.setRoles(person.getRoles());
-        return repository.save(p);
+    public Person update(Long id, PersonCreateDTO dto) {
+        try {
+            Person foundPerson = findById(id);
+            Gender gender = Gender.valueOf(dto.getGender().toUpperCase());
+            foundPerson.setUsername(dto.getUsername());
+            foundPerson.setPassword(dto.getPassword());
+            foundPerson.setDateOfBirth(new SimpleDateFormat("dd-MM-yyyy").parse(dto.getDateOfBirth()));
+            foundPerson.setGender(gender);
+            checkUsernameDuplication(foundPerson);
+            return repository.save(foundPerson);
+        } catch (ParseException e) {
+            throw new NotFoundException("Date format incorrect: Format must be dd-MM-yyyy (day-month-year)");
+        }
+
     }
 
     /**
@@ -106,8 +128,8 @@ public class PersonService {
      * @param id The ID of the person to be deleted.
      */
     public void delete(Long id) {
-        final Person p = findById(id);
-        repository.delete(p);
+        final Person person = findById(id);
+        repository.delete(person);
     }
 
 

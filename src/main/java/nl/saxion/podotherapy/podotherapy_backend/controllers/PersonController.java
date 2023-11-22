@@ -3,7 +3,9 @@ package nl.saxion.podotherapy.podotherapy_backend.controllers;
 import java.util.List;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonCreateDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonResponseDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonResponseDetailedDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +23,7 @@ import nl.saxion.podotherapy.podotherapy_backend.services.PersonService;
 public class PersonController {
 	
 	@Autowired
-	private PersonService service;
+	private PersonService personService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -34,9 +36,22 @@ public class PersonController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<List<PersonResponseDTO>> findAll() {
-		final List<Person> persons = service.findAllNonAdmin();
+		final List<Person> persons = personService.findAllNonAdmin();
 		final List<PersonResponseDTO> dtos = persons.stream().map(PersonResponseDTO::new).toList();
 		return ResponseEntity.ok(dtos);
+	}
+
+	/**
+	 * Retrieves a person from the database with the specified ID.
+	 *
+	 * @param id - the ID of the person to retrieve
+	 * @return ResponseEntity<PersonResponseDetailedDTO> - a ResponseEntity object containing a PersonResponseDetailedDTO object representing the person with the specified ID, or null if no person is found.
+	 */
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity<PersonResponseDetailedDTO> findOne(@PathVariable Long id) {
+		final PersonResponseDetailedDTO dto = personService.findByIdDetailed(id);
+		return ResponseEntity.ok(dto);
 	}
 
 	/**
@@ -49,20 +64,21 @@ public class PersonController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<PersonCreateDTO> create(@RequestBody PersonCreateDTO dto) {
 		dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-		return ResponseEntity.ok(service.create(dto));
+		return ResponseEntity.ok(personService.create(dto));
 	}
 
+
 	/**
-	 * Updates an existing person in the database.
+	 * Retrieves a person from the database.
 	 *
-	 * @param dto - a PersonDTO object representing the details of the person to be updated.
-	 * @return ResponseEntity<PersonDTO> - a ResponseEntity object containing a PersonDTO object representing the updated person.
+	 * @param id - the ID of the person to be retrieved.
+	 * @return ResponseEntity<PersonDTO> - a ResponseEntity object containing a PersonDTO object representing the retrieved person.
 	 */
-	@PostMapping("/update")
+	@PostMapping("{id}/update/")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<PersonCreateDTO> update(@RequestBody PersonCreateDTO dto) {
+	public ResponseEntity<Person> update(@PathVariable Long id, @RequestBody PersonCreateDTO dto) {
 		dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-		return ResponseEntity.ok(service.create(dto));
+		return ResponseEntity.ok(personService.update(id, dto));
 	}
 
 	/**
@@ -73,7 +89,7 @@ public class PersonController {
 	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		service.delete(id);
+		personService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
