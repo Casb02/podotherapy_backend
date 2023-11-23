@@ -3,6 +3,7 @@ package nl.saxion.podotherapy.podotherapy_backend.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,13 +25,13 @@ public class History {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "history_id")
-    private List<Day> days;
+    private List<Day> days = new ArrayList<>();
 
     public History() {
         super();
         this.uuid = UUID.randomUUID().toString();
         Day today = new Day();
-        this.days = List.of(today);
+        this.days = new ArrayList<>(List.of(today));
     }
 
     /**
@@ -40,6 +41,20 @@ public class History {
      */
     public void addDay(Day day) {
         this.days.add(day);
+    }
+
+    public void addDays(List<Day> days) {
+        this.days.addAll(days);
+    }
+
+    public void createNewDay() {
+
+        Day day = new Day();
+        this.days.add(day);
+    }
+
+    public List<Day> getLastSevenDays() {
+        return this.days.subList(Math.max(this.days.size() - 7, 0), this.days.size());
     }
 
     @Override

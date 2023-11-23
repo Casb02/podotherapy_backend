@@ -47,6 +47,12 @@ public class Day {
         this.status = DayStatus.NONE;
     }
 
+    public Day(Date date) {
+        this.uuid = UUID.randomUUID().toString();
+        this.date = date;
+        this.status = DayStatus.NONE;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

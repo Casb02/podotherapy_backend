@@ -1,5 +1,6 @@
 package nl.saxion.podotherapy.podotherapy_backend.services;
 
+import nl.saxion.podotherapy.podotherapy_backend.entities.Day;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
@@ -38,7 +39,11 @@ public class DatabaseService {
 			final Person user6 = new Person("Sanne", passwordEncoder.encode("root"), new SimpleDateFormat("dd-MM-yyyy").parse("12-03-2009"), Gender.FEMALE);
 			final Person admin = new Person("Admin", passwordEncoder.encode("admin"));
 
+			Date yesterday = new Date();
+			yesterday.setDate(yesterday.getDate() - 1);
 
+			Day oldDay = new Day(yesterday);
+			user1.getHistory().addDay(oldDay);
 
 			// Maak MockMultipartFile objecten aan
 			final MultipartFile gamefile1 = new MockMultipartFile(
@@ -66,6 +71,9 @@ public class DatabaseService {
 			System.out.println(personService.create(admin));
 			System.out.println(storageService.storeFile(gamefile1, user1));
 			System.out.println(storageService.storeFile(gamefile2, user2));
+
+			//print ArrayList with days user1.getHistory().getLastSevenDays()
+			user1.getHistory().getLastSevenDays().forEach(System.out::println);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

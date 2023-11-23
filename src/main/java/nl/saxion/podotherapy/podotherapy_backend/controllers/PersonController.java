@@ -74,10 +74,9 @@ public class PersonController {
 	 * @param id - the ID of the person to be retrieved.
 	 * @return ResponseEntity<PersonDTO> - a ResponseEntity object containing a PersonDTO object representing the retrieved person.
 	 */
-	@PostMapping("{id}/update/")
+	@PostMapping("/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Person> update(@PathVariable Long id, @RequestBody PersonCreateDTO dto) {
-		dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return ResponseEntity.ok(personService.update(id, dto));
 	}
 

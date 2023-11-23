@@ -1,0 +1,68 @@
+### Auth as User
+POST {{url}}/auth/authenticate
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "Kevin",
+  "password": "root"
+}
+
+> {%
+    client.test("Authenticate to the API to get a token", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.global.set("user-token", response.body.token);
+%}
+
+### Auth as Admin
+POST {{url}}/auth/authenticate
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "Admin",
+  "password": "admin"
+}
+
+> {%
+    client.test("Authenticate to the API to get a token", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.global.set("admin-token", response.body.token);
+%}
+
+### Auth as User with wrong password
+POST {{url}}/auth/authenticate
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "Kevin",
+  "password": "wrong"
+}
+
+> {%
+    client.test("Check if false password for user returns error", function() {
+        client.assert(response.status === 400, "Response status is not 400");
+    });
+%}
+
+### Auth as Admin with wrong password
+POST {{url}}/auth/authenticate
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "Admin",
+  "password": "wrong"
+}
+
+> {%
+    client.test("Check if false password for admin returns error" , function() {
+        client.assert(response.status === 400, "Response status is not 400");
+    });
+%}
+
