@@ -7,18 +7,3 @@ services:
       - 'POSTGRES_USER=admin'
     ports:
       - '5454:5432'
-
-#  spring-boot:
-#    image: 'openjdk:17-jdk'
-#    depends_on:
-#      - postgres
-#    ports:
-#      - '8080:8080'
-#    volumes:
-#      - uploads:/var/uploads
-#      - ./devbuilds/app.jar:/home/app.jar
-#      - ./devbuilds/application.properties:/home/application.properties
-#    command: ["java", "-jar", "./home/app.jar", "--spring.profiles.active=dev"]
-#
-#volumes:
-#  uploads:

@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    image: podo-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/podo_db
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=0ae6ab2a67c78085314c7995
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=podo_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=0ae6ab2a67c78085314c7995
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

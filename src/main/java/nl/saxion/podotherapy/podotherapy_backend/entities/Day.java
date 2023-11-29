@@ -13,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@ToString
 @Entity
 public class Day {
     @Id
