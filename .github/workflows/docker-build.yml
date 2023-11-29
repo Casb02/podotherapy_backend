@@ -42,7 +42,7 @@ jobs:
       - name: Deploy to Azure
         uses: appleboy/ssh-action@v0.1.6
         env:
-          GITHUB_USERNAME: ${{ github.repository_owner }}
+          GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           host: ${{ secrets.HOST }}
