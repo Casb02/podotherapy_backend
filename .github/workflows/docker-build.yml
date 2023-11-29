@@ -51,7 +51,7 @@ jobs:
           key: ${{ secrets.KEY }}
           envs: TOKEN
           script: |
-            docker login ghcr.io -u Casb02 -p $TOKEN
-            docker pull ghcr.io/casb02/podotherapy_backend/podiatryapp:latest
-            docker-compose down
-            docker-compose up -d
+            sudo docker login ghcr.io -u Casb02 -p $TOKEN
+            sudo docker pull ghcr.io/casb02/podotherapy_backend/podiatryapp:latest
+            sudo docker-compose down
+            sudo docker-compose up -d
