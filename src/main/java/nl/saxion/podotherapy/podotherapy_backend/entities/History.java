@@ -53,10 +53,6 @@ public class History {
         this.days.add(day);
     }
 
-    public List<Day> getLastSevenDays() {
-        return this.days.subList(Math.max(this.days.size() - 7, 0), this.days.size());
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

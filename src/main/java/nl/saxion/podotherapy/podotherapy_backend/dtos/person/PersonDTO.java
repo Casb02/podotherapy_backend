@@ -1,6 +1,7 @@
 package nl.saxion.podotherapy.podotherapy_backend.dtos.person;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,26 +50,6 @@ public class PersonDTO {
 		this.dateOfBirth = dateOfBirth;
 		this.gender = gender;
 		this.history = history;
-	}
-	
-	public PersonDTO(Person person) {
-		super();
-		this.id = person.getId();
-		this.username = person.getUsername();
-		this.setRoles(person.getRoles());
-
-		if (person.getDateOfBirth() != null) {
-			this.dateOfBirth = person.getDateOfBirth().toString();
-		} else this.dateOfBirth = "";
-
-
-		if (person.getGender() != null) {
-			this.gender = person.getGender().toString();
-		} else this.gender = Gender.UNKNOWN.toString();
-
-		if (person.getHistory() != null) {
-			this.history = new HistoryDTO(person.getHistory());
-		} else this.history = new HistoryDTO();
 	}
 
 	/**

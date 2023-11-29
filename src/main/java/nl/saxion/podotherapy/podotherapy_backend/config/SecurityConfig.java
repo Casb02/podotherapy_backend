@@ -1,5 +1,7 @@
 package nl.saxion.podotherapy.podotherapy_backend.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,6 +37,8 @@ public class SecurityConfig {
 			"/**"
 		};
 
+	private static final int strength = calculateStrength();
+
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
@@ -47,22 +52,22 @@ public class SecurityConfig {
 	 * @return the configured SecurityFilterChain object
 	 * @throws Exception if an error occurs during configuration
 	 */
-	@SuppressWarnings("deprecation")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		return httpSecurity
-				.csrf().disable()
-				.authorizeHttpRequests()
-				.requestMatchers(ALLOW_EVERYTHING).permitAll()
-				.requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN") 	// If UserDetails.getAuthorities return [ADMIN, ...]
-				//.requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")		// If UserDetails.getAuthorities return [ROLE_ADMIN, ...] 
-				.anyRequest().authenticated()
-				.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
+		httpSecurity
+				.csrf(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers(ALLOW_EVERYTHING).permitAll()
+						.requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
+						.anyRequest().authenticated()
+				)
+				.sessionManagement(session -> session
+						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
 				.authenticationProvider(authenticationProvider())
-				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
+				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return httpSecurity.build();
 	}
 
 	/**
@@ -72,7 +77,7 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder(strength);
 	}
 
 	/**
@@ -109,4 +114,29 @@ public class SecurityConfig {
 		return authenticationProvider;
 	}
 
+	/**
+	 * Calculates the strength of the password encoder based on the number of available processor cores.
+	 * This will ensure passwords will be hashed better if the server has more processor cores.
+	 *
+	 * @return the strength of the password encoder
+	 */
+	private static int calculateStrength() {
+		int strength = 10;
+		LoggerFactory.getLogger(SecurityConfig.class).info("Calculating password encoder strength...");
+
+		while (true) {
+			long startTime = System.currentTimeMillis();
+			new BCryptPasswordEncoder(strength).encode("a_LonG_Pa$$w0rd!");
+			long duration = System.currentTimeMillis() - startTime;
+
+			if (duration > 1000 || strength > 25) {
+				break;
+			} else {
+				strength++;
+			}
+		}
+
+		LoggerFactory.getLogger(SecurityConfig.class).info("Calculated password encoder strength is: " + strength);
+		return strength;
+	}
 }

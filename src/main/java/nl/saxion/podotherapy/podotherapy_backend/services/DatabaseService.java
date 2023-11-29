@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class DatabaseService {
@@ -43,6 +44,7 @@ public class DatabaseService {
 			yesterday.setDate(yesterday.getDate() - 1);
 
 			Day oldDay = new Day(yesterday);
+			oldDay.setExerciseIds(List.of("1","14","2"));
 			user1.getHistory().addDay(oldDay);
 
 			// Maak MockMultipartFile objecten aan
@@ -72,8 +74,6 @@ public class DatabaseService {
 			System.out.println(storageService.storeFile(gamefile1, user1));
 			System.out.println(storageService.storeFile(gamefile2, user2));
 
-			//print ArrayList with days user1.getHistory().getLastSevenDays()
-			user1.getHistory().getLastSevenDays().forEach(System.out::println);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

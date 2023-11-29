@@ -3,6 +3,8 @@ package nl.saxion.podotherapy.podotherapy_backend.repositories;
 import java.util.List;
 import java.util.Optional;
 
+import nl.saxion.podotherapy.podotherapy_backend.entities.Day;
+import nl.saxion.podotherapy.podotherapy_backend.entities.History;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;

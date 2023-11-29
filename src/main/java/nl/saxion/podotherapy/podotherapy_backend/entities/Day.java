@@ -1,9 +1,11 @@
 package nl.saxion.podotherapy.podotherapy_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import nl.saxion.podotherapy.podotherapy_backend.enums.DayStatus;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +39,7 @@ public class Day {
     private List<String> exerciseIds;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "history_id", insertable = false, updatable = false)
     private History history;
 
@@ -45,12 +48,14 @@ public class Day {
         this.uuid = UUID.randomUUID().toString();
         this.date = new Date();
         this.status = DayStatus.NONE;
+        this.exerciseIds = new ArrayList<>();
     }
 
     public Day(Date date) {
         this.uuid = UUID.randomUUID().toString();
         this.date = date;
         this.status = DayStatus.NONE;
+        this.exerciseIds = new ArrayList<>();
     }
 
     @Override

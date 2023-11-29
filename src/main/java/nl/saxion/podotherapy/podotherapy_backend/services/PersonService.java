@@ -2,15 +2,22 @@ package nl.saxion.podotherapy.podotherapy_backend.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import nl.saxion.podotherapy.podotherapy_backend.dtos.history.DayDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.history.HistoryDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonCreateDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonResponseDetailedDTO;
+import nl.saxion.podotherapy.podotherapy_backend.entities.Day;
+import nl.saxion.podotherapy.podotherapy_backend.entities.History;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
 import nl.saxion.podotherapy.podotherapy_backend.exceptions.DuplicationException;
 import nl.saxion.podotherapy.podotherapy_backend.exceptions.NotFoundException;
+import nl.saxion.podotherapy.podotherapy_backend.repositories.DayRepository;
+import nl.saxion.podotherapy.podotherapy_backend.repositories.HistoryRepository;
 import nl.saxion.podotherapy.podotherapy_backend.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,12 +25,19 @@ import org.springframework.stereotype.Service;
 
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PersonService {
 
     @Autowired
-    private PersonRepository repository;
+    private PersonRepository personRepository;
+
+    @Autowired
+    private HistoryRepository historyRepository;
+
+    @Autowired
+    private DayRepository dayRepository;
 
     /**
      * Finds a person by their ID.
@@ -33,7 +47,7 @@ public class PersonService {
      * @throws NotFoundException if no person is found with the specified ID
      */
     public Person findById(Long id) {
-        return repository.findById(id).orElseThrow(
+        return personRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Person not found: " + id));
     }
 
@@ -43,8 +57,21 @@ public class PersonService {
      * @param id the ID of the person to find
      * @return the detailed DTO representation of the person with the specified ID
      */
+    @Transactional
     public PersonResponseDetailedDTO findByIdDetailed(Long id) {
-        return new PersonResponseDetailedDTO(findById(id));
+        Person person = findById(id);
+        History history = historyRepository.findById(person.getHistory().getId()).orElseThrow(
+                () -> new NotFoundException("History not found: " + person.getHistory().getId())
+        );
+        List<DayDTO> lastDays = dayRepository.findAllByDateBetweenAndHistory_Id(
+                new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000),
+                new Date(),
+                history.getId()
+        ).stream().map(DayDTO::new).toList();
+        if (lastDays.size() == 0) {
+            lastDays = new ArrayList<>();
+        }
+        return new PersonResponseDetailedDTO(person, lastDays);
     }
 
     /**
@@ -53,7 +80,7 @@ public class PersonService {
      * @return a list of all persons found in the repository
      */
     public List<Person> findAll() {
-        return repository.findAll();
+        return personRepository.findAll();
     }
 
     /**
@@ -62,7 +89,7 @@ public class PersonService {
      * @return A list of Person objects representing all non-administrator persons.
      */
     public List<Person> findAllNonAdmin() {
-        return repository.findAllByRolesNotContaining(Role.ADMIN.getId());
+        return personRepository.findAllByRolesNotContaining(Role.ADMIN.getId());
     }
 
     /**
@@ -75,7 +102,7 @@ public class PersonService {
     public Person create(Person person) {
         person.addRole(Role.USER); //Default role
         checkUsernameDuplication(person);
-        return repository.save(person);
+        return personRepository.save(person);
     }
 
     /**
@@ -115,7 +142,7 @@ public class PersonService {
             foundPerson.setDateOfBirth(new SimpleDateFormat("dd-MM-yyyy").parse(dto.getDateOfBirth()));
             foundPerson.setGender(gender);
             checkUsernameDuplication(foundPerson);
-            return repository.save(foundPerson);
+            return personRepository.save(foundPerson);
         } catch (ParseException e) {
             throw new NotFoundException("Date format incorrect: Format must be dd-MM-yyyy (day-month-year)");
         }
@@ -129,7 +156,7 @@ public class PersonService {
      */
     public void delete(Long id) {
         final Person person = findById(id);
-        repository.delete(person);
+        personRepository.delete(person);
     }
 
 
@@ -143,7 +170,7 @@ public class PersonService {
         final String username = person.getUsername();
         if (username != null && username.length() > 0) {
             final Long id = person.getId();
-            final Person p = repository.findByUsername(username).orElse(null);
+            final Person p = personRepository.findByUsername(username).orElse(null);
             if (p != null && Objects.equals(p.getUsername(), username) && !Objects.equals(p.getId(), id)) {
                 throw new DuplicationException("Username duplication: " + username);
             }
@@ -168,8 +195,15 @@ public class PersonService {
      * @throws NotFoundException If the person with the given username is not found.
      */
     public Person findByUsername(String username) {
-        return repository.findByUsername(username).orElseThrow(
+        return personRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("Person not found: " + username));
     }
 
+    public HistoryDTO findHistory(Long id) {
+        History history = historyRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("History not found: " + id)
+        );
+        List<DayDTO> days = dayRepository.findAllByHistory_Id(history.getId()).stream().map(DayDTO::new).toList();
+        return new HistoryDTO(history, days);
+    }
 }

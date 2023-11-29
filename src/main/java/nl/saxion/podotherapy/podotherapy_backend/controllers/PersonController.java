@@ -2,6 +2,7 @@ package nl.saxion.podotherapy.podotherapy_backend.controllers;
 
 import java.util.List;
 
+import nl.saxion.podotherapy.podotherapy_backend.dtos.history.HistoryDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonCreateDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonDTO;
 import nl.saxion.podotherapy.podotherapy_backend.dtos.person.PersonResponseDTO;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
@@ -47,11 +49,20 @@ public class PersonController {
 	 * @param id - the ID of the person to retrieve
 	 * @return ResponseEntity<PersonResponseDetailedDTO> - a ResponseEntity object containing a PersonResponseDetailedDTO object representing the person with the specified ID, or null if no person is found.
 	 */
+	@Transactional
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<PersonResponseDetailedDTO> findOne(@PathVariable Long id) {
 		final PersonResponseDetailedDTO dto = personService.findByIdDetailed(id);
 		return ResponseEntity.ok(dto);
+	}
+
+	@Transactional
+	@GetMapping("/{id}/history")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity<HistoryDTO> findHistory(@PathVariable Long id) {
+
+		return ResponseEntity.ok(personService.findHistory(id));
 	}
 
 	/**

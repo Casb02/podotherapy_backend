@@ -3,6 +3,7 @@ package nl.saxion.podotherapy.podotherapy_backend.dtos.person;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.history.DayDTO;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Day;
 import nl.saxion.podotherapy.podotherapy_backend.entities.Person;
 import nl.saxion.podotherapy.podotherapy_backend.enums.Gender;
@@ -27,14 +28,14 @@ public class PersonResponseDetailedDTO {
 	@Schema(description = "The gender of the person, ENUM (MALE, FEMALE, OTHER, UNKNOWN)", example = "MALE")
 	private String gender;
 
-	private List<Day> lastSevenDays = new ArrayList<>() ;
+	private List<DayDTO> lastSevenDays = new ArrayList<>() ;
 
 
 	public PersonResponseDetailedDTO() {
 		super();
 	}
 
-	public PersonResponseDetailedDTO(Long id, String username, String dateOfBirth, String gender, ArrayList<Day> lastSevenDays) {
+	public PersonResponseDetailedDTO(Long id, String username, String dateOfBirth, String gender, ArrayList<DayDTO> lastSevenDays) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -43,7 +44,7 @@ public class PersonResponseDetailedDTO {
 		this.lastSevenDays = lastSevenDays;
 	}
 
-	public PersonResponseDetailedDTO(Person person) {
+	public PersonResponseDetailedDTO(Person person, List<DayDTO> lastSevenDays) {
 		super();
 		this.id = person.getId();
 		this.username = person.getUsername();
@@ -59,7 +60,7 @@ public class PersonResponseDetailedDTO {
 			this.gender = person.getGender().toString();
 		} else this.gender = Gender.UNKNOWN.toString();
 
-		this.lastSevenDays = person.getHistory().getLastSevenDays();
+		this.lastSevenDays = lastSevenDays;
 	}
 
 	
