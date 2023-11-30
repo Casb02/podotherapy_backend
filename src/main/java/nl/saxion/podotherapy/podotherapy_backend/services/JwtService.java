@@ -1,6 +1,7 @@
 package nl.saxion.podotherapy.podotherapy_backend.services;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.crypto.SecretKey;
 
@@ -40,5 +41,19 @@ public class JwtService {
 				.parseClaimsJws(token)
 				.getBody();
 	}
+
+    public boolean validate(String token) {
+		//strip whitespace
+		token = token.trim();
+		try {
+			Claims claims = getClaims(token);
+			Date expirationDate = claims.getExpiration();
+			Date now = new Date(System.currentTimeMillis());
+			return expirationDate != null && now.before(expirationDate);
+		} catch (Exception e) {
+			Logger.getLogger("JwtService").warning("Error validating token: " + e.getMessage());
+			return false;
+		}
+    }
 }
 

@@ -16,7 +16,7 @@ public class PersonResponseDTO {
 	@Schema(description = "The username of the person.", example = "Kevin")
 	private String username;
 
-	@Schema(description = "The date of birth of the person. (yyyy-MM-dd)", example = "2012-09-18")
+	@Schema(description = "The date of birth of the person. (yyyy-MM-dd)", example = "18-09-2012")
 	private String dateOfBirth;
 
 	@Schema(description = "The gender of the person, ENUM (MALE, FEMALE, OTHER, UNKNOWN)", example = "MALE")
@@ -44,6 +44,9 @@ public class PersonResponseDTO {
 			this.dateOfBirth = person.getDateOfBirth().toString();
 			//remove "2002-09-18 00:00:00.0" to "2002-09-18"
 			this.dateOfBirth = this.dateOfBirth.substring(0, 10);
+			//Parse it to mm-dd-yyyy
+			String[] date = this.dateOfBirth.split("-");
+			this.dateOfBirth = date[1] + "-" + date[2] + "-" + date[0];
 		} else this.dateOfBirth = "";
 
 

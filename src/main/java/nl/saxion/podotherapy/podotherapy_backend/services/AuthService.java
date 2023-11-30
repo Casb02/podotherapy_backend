@@ -1,6 +1,7 @@
 package nl.saxion.podotherapy.podotherapy_backend.services;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.AuthRequestUsernameDTO;
+import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.TokenValidResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,7 +59,9 @@ public class AuthService {
 		final Person person = personService.findByUsername(dto.getUsername());
 		return new AuthResponseDTO(jwtService.generateToken(person.getUsername()));
 	}
-	
-	
-	
+
+
+    public TokenValidResponseDTO validate(String token) {
+		return new TokenValidResponseDTO(jwtService.validate(token));
+    }
 }
