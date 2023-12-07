@@ -1,6 +1,8 @@
 package nl.saxion.podotherapy.podotherapy_backend.services;
 
 import nl.saxion.podotherapy.podotherapy_backend.dtos.auth.*;
+import nl.saxion.podotherapy.podotherapy_backend.enums.Role;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -75,7 +77,7 @@ public class AuthService {
 		final Person person = personService.findByUsername(dto.getUsername());
 
 		//check if user is admin
-		if(!person.getRoles().contains("ADMIN")) {
+		if(!person.getRoles().contains(Role.ADMIN)) {
 			throw new BadCredentialsException("Bad credentials");
 		}
 
