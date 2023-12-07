@@ -39,11 +39,28 @@ public class AuthController {
 	 * @param dto The AuthRequestUsernameDTO object containing the user's credentials.
 	 * @return A ResponseEntity object containing the AuthResponseDTO object associated with the authenticated user.
 	 */
-	@PostMapping("/authenticate")
+	@PostMapping("/authenticate/dashboard")
 	public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthRequestUsernameDTO dto) {
-		return ResponseEntity.ok(authService.authenticateWithUsername(dto));
+		return ResponseEntity.ok(authService.authenticateWithUsernameDashboard(dto));
 	}
 
+	/**
+	 * Authenticates a user with the provided credentials.
+	 *
+	 * @param dto The AuthRequestUsernameDTO object containing the user's credentials.
+	 * @return A ResponseEntity object containing the AuthResponseDTO object associated with the authenticated user.
+	 */
+	@PostMapping("/authenticate/app")
+	public ResponseEntity<AuthResponseAppDTO> authenticateApp(@RequestBody AuthRequestUsernameDTO dto) {
+		return ResponseEntity.ok(authService.authenticateWithUsernameApp(dto));
+	}
+
+	/**
+	 * Validates the provided token.
+	 *
+	 * @param body The TokenValidRequestDTO object containing the token to be validated.
+	 * @return A ResponseEntity object containing the TokenValidResponseDTO object indicating whether the token is valid.
+	 */
 	@PostMapping("/validate/token")
 	public ResponseEntity<TokenValidResponseDTO> validate(@RequestBody TokenValidRequestDTO body) {
 		return ResponseEntity.ok(authService.validate(body.getToken()));
