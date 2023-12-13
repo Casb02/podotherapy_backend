@@ -46,7 +46,7 @@ public class PersonResponseDTO {
 			this.dateOfBirth = this.dateOfBirth.substring(0, 10);
 			//Parse it to mm-dd-yyyy
 			String[] date = this.dateOfBirth.split("-");
-			this.dateOfBirth = date[1] + "-" + date[2] + "-" + date[0];
+			this.dateOfBirth = date[2] + "-" + date[1] + "-" + date[0];
 		} else this.dateOfBirth = "";
 
 

@@ -113,9 +113,9 @@ public class PersonService {
      * @throws NotFoundException If the date format in the PersonCreateDTO is incorrect.
      */
     public PersonCreateDTO create(PersonCreateDTO dto) {
-        // Date format: dd-MM-yyyy
+        // Date format: yyyy-MM-dd (Javascript datepicker)
         try {
-            Date dateOfBirth = new SimpleDateFormat("dd-MM-yyyy").parse(dto.getDateOfBirth());
+            Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(dto.getDateOfBirth());
             Gender gender = Gender.valueOf(dto.getGender().toUpperCase());
             Person person = new Person(dto.getUsername(), dto.getPassword(), dateOfBirth, gender);
             return new PersonCreateDTO(create(person));

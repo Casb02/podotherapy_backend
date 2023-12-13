@@ -41,7 +41,7 @@ public class AuthService {
 		
 		person = personService.create(person);
 		
-		return new AuthResponseDTO(jwtService.generateToken(person.getUsername()));
+		return new AuthResponseDTO(jwtService.generateToken(person.getUsername()), person.getUsername());
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class AuthService {
 						dto.getPassword()));
 		
 		final Person person = personService.findByUsername(dto.getUsername());
-		return new AuthResponseDTO(jwtService.generateToken(person.getUsername()));
+		return new AuthResponseDTO(jwtService.generateToken(person.getUsername()), person.getUsername());
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class AuthService {
 			throw new BadCredentialsException("Bad credentials");
 		}
 
-		return new AuthResponseDTO(jwtService.generateToken(person.getUsername()));
+		return new AuthResponseDTO(jwtService.generateToken(person.getUsername()), person.getUsername());
 	}
 
 	/**

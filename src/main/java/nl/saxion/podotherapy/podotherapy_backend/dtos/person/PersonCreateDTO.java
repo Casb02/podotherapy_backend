@@ -21,7 +21,7 @@ public class PersonCreateDTO {
 	@Schema(description = "The password of the person.", example = "root")
 	private String password;
 
-	@Schema(description = "The date of birth of the person. (dd-MM-yyyy)", example = "18-09-2012")
+	@Schema(description = "The date of birth of the person. (yyyy-MM-dd, inline with JS datepicker)", example = "2012-09-18")
 	private String dateOfBirth;
 
 	@Schema(description = "The gender of the person, ENUM (MALE, FEMALE, OTHER, UNKNOWN)", example = "MALE")
