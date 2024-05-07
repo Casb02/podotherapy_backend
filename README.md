@@ -1,5 +1,14 @@
 # podotherapy_backend
 
+## IMPORTANT NOTE
+Since I developed this for a school project with no financial interest, this project is licensed under the following terms: https://creativecommons.org/publicdomain/zero/1.0/
+
+This means:
+
+- **Everyone in the world can freely use, modify, distribute, and build upon this project** without any restrictions or obligations.
+- The project is available for both personal and commercial use at no cost.
+- No copyright or patent rights are asserted over the work by the creator.
+
 ### Credits
 
 A list of credits for the code used in this project as a base or example or any other form of inspiration.
